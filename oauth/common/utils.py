@@ -4,6 +4,11 @@ import requests
 import jwt  # PyJWT
 
 
+def escape_soql(value: str) -> str:
+    """SOQL インジェクション対策のためのエスケープ処理。"""
+    return value.replace("\\", "\\\\").replace("'", "\\'")
+
+
 def get_access_token(
     client_id: str,
     username: str,

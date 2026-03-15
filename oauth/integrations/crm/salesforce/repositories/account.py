@@ -1,4 +1,5 @@
 from integrations.crm.salesforce.client import SalesforceClient
+from common.utils import escape_soql
 
 
 class AccountRepository(SalesforceClient):
@@ -14,7 +15,7 @@ class AccountRepository(SalesforceClient):
 
     def search_by_name(self, name: str) -> list[dict]:
         """名前の部分一致で取引先を検索する。"""
-        safe_name = name.replace("'", "\\'")
+        safe_name = escape_soql(name)
         query = (
             f"SELECT Id, Name, Phone, BillingCity, BillingState "
             f"FROM Account WHERE Name LIKE '%{safe_name}%'"

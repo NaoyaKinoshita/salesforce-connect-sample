@@ -1,3 +1,8 @@
+def escape_soql(value: str) -> str:
+    """SOQL インジェクション対策のためのエスケープ処理。"""
+    return value.replace("\\", "\\\\").replace("'", "\\'")
+
+
 def strtobool(val: str) -> bool:
     """Convert a string representation of truth to true (1) or false (0).
 
