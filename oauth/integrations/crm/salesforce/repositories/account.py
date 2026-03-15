@@ -33,6 +33,8 @@ class AccountRepository(SalesforceClient):
             作成された取引先の ID
         """
         result = self.sf.Account.create(data)
+        if not result.get("id"):
+            raise RuntimeError(f"取引先の作成に失敗しました: {result}")
         return result["id"]
 
     def update(self, account_id: str, data: dict) -> None:

@@ -25,8 +25,14 @@ def get_access_token(
         "exp": now + 300,  # 5分後に期限切れ
     }
 
-    with open(private_key_file) as f:
-        private_key = f.read()
+    try:
+        with open(private_key_file) as f:
+            private_key = f.read()
+    except OSError as e:
+        raise RuntimeError(
+            f"秘密鍵ファイルの読み込みに失敗しました: {private_key_file}"
+        ) from e
+
     assertion = jwt.encode(payload, private_key, algorithm="RS256")
 
     response = requests.post(
@@ -37,7 +43,21 @@ def get_access_token(
         },
         timeout=30,
     )
-    response.raise_for_status()
+    try:
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        raise RuntimeError(
+            f"Salesforce 認証エラー: {response.status_code} {response.text}"
+        ) from e
 
-    token_data = response.json()
-    return token_data["access_token"], token_data["instance_url"]
+    try:
+        token_data = response.json()
+    except ValueError as e:
+        raise RuntimeError("Salesforce 認証レスポンスのパースに失敗しました") from e
+
+    try:
+        return token_data["access_token"], token_data["instance_url"]
+    except KeyError as e:
+        raise RuntimeError(
+            f"Salesforce 認証レスポンスに必要なキーが存在しません: {e}"
+        ) from e

@@ -26,13 +26,24 @@ class SalesforceClient:
             },
             timeout=30,
         )
-        if not response.ok:
+        try:
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as e:
             raise RuntimeError(
                 f"Salesforce 認証エラー: {response.status_code} {response.text}"
-            )
+            ) from e
 
-        token_data = response.json()
-        self.sf = Salesforce(
-            instance_url=token_data["instance_url"],
-            session_id=token_data["access_token"],
-        )
+        try:
+            token_data = response.json()
+        except ValueError as e:
+            raise RuntimeError("Salesforce 認証レスポンスのパースに失敗しました") from e
+
+        try:
+            self.sf = Salesforce(
+                instance_url=token_data["instance_url"],
+                session_id=token_data["access_token"],
+            )
+        except KeyError as e:
+            raise RuntimeError(
+                f"Salesforce 認証レスポンスに必要なキーが存在しません: {e}"
+            ) from e
