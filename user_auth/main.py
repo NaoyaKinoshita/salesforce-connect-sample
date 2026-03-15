@@ -60,6 +60,39 @@ def main() -> None:
     repo.delete(new_id)
     print(f"  ID {new_id} を削除しました")
 
+    # ------------------------------------------------------------------ #
+    # 一括作成
+    # ------------------------------------------------------------------ #
+    print("\n=== 取引先を一括作成 ===")
+    bulk_results = repo.bulk_create([
+        {"Name": "株式会社一括テストA"},
+        {"Name": "株式会社一括テストB"},
+        {"Name": "株式会社一括テストC"},
+    ])
+    bulk_ids = [r["id"] for r in bulk_results if r["success"]]
+    for r in bulk_results:
+        print(f"  id={r['id']}  success={r['success']}")
+
+    # ------------------------------------------------------------------ #
+    # 一括更新
+    # ------------------------------------------------------------------ #
+    print("\n=== 取引先を一括更新 ===")
+    update_results = repo.bulk_update([
+        {"Id": bulk_ids[0], "Phone": "03-0001-0001"},
+        {"Id": bulk_ids[1], "Phone": "03-0002-0002"},
+        {"Id": bulk_ids[2], "Phone": "03-0003-0003"},
+    ])
+    for r in update_results:
+        print(f"  id={r['id']}  success={r['success']}")
+
+    # ------------------------------------------------------------------ #
+    # 一括削除
+    # ------------------------------------------------------------------ #
+    print("\n=== 取引先を一括削除 ===")
+    delete_results = repo.bulk_delete(bulk_ids)
+    for r in delete_results:
+        print(f"  id={r['id']}  success={r['success']}")
+
 
 if __name__ == "__main__":
     main()

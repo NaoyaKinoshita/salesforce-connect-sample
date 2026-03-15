@@ -51,3 +51,53 @@ class AccountRepository(SalesforceClient):
             account_id: 削除対象の取引先 ID
         """
         self.sf.Account.delete(account_id)
+
+    # ------------------------------------------------------------------ #
+    # 一括操作                                                             #
+    # ------------------------------------------------------------------ #
+
+    def bulk_create(self, records: list[dict]) -> list[dict]:
+        """取引先を一括作成する。
+
+        Args:
+            records: 作成するレコードのリスト。例: [{"Name": "会社A"}, ...]
+
+        Returns:
+            各レコードの処理結果（id, success, errors）のリスト
+        """
+        return self.sf.bulk.Account.insert(records)
+
+    def bulk_update(self, records: list[dict]) -> list[dict]:
+        """取引先を一括更新する。
+
+        Args:
+            records: 更新するレコードのリスト。各要素に Id が必須。
+                     例: [{"Id": "001...", "Phone": "03-0000-0000"}, ...]
+
+        Returns:
+            各レコードの処理結果（id, success, errors）のリスト
+        """
+        return self.sf.bulk.Account.update(records)
+
+    def bulk_upsert(self, records: list[dict], external_id_field: str) -> list[dict]:
+        """取引先を一括 upsert する。
+
+        Args:
+            records: upsert するレコードのリスト
+            external_id_field: 外部 ID フィールドの API 参照名。例: "ExternalId__c"
+
+        Returns:
+            各レコードの処理結果（id, success, errors）のリスト
+        """
+        return self.sf.bulk.Account.upsert(records, external_id_field)
+
+    def bulk_delete(self, account_ids: list[str]) -> list[dict]:
+        """取引先を一括削除する。
+
+        Args:
+            account_ids: 削除対象の取引先 ID のリスト
+
+        Returns:
+            各レコードの処理結果（id, success, errors）のリスト
+        """
+        return self.sf.bulk.Account.delete([{"Id": i} for i in account_ids])
