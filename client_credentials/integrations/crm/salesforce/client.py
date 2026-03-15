@@ -2,6 +2,7 @@
 
 import requests
 from simple_salesforce import Salesforce
+
 from integrations.crm.salesforce.const import (
     SF_CLIENT_ID,
     SF_CLIENT_SECRET,
@@ -26,7 +27,9 @@ class SalesforceClient:
             timeout=30,
         )
         if not response.ok:
-            raise RuntimeError(f"Salesforce 認証エラー: {response.status_code} {response.text}")
+            raise RuntimeError(
+                f"Salesforce 認証エラー: {response.status_code} {response.text}"
+            )
 
         token_data = response.json()
         self.sf = Salesforce(

@@ -10,7 +10,9 @@ class _const:
 
 import os
 import sys
+
 from dotenv import load_dotenv, find_dotenv
+
 from common.utils import strtobool
 
 load_dotenv(find_dotenv())

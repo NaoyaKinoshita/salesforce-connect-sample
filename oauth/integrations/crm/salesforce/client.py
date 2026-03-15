@@ -1,6 +1,7 @@
 """Salesforce接続管理モジュール（JWT Bearer Flow）"""
 
 from simple_salesforce import Salesforce
+
 from common.utils import get_access_token
 from integrations.crm.salesforce.const import (
     SF_CLIENT_ID,

@@ -1,6 +1,7 @@
 """Salesforce接続管理モジュール（ユーザー名/パスワード認証）"""
 
 from simple_salesforce import Salesforce
+
 from integrations.crm.salesforce.const import (
     SF_USERNAME,
     SF_PASSWORD,
