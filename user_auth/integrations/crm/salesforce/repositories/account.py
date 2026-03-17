@@ -38,14 +38,13 @@ class AccountRepository(SalesforceClient):
             raise RuntimeError(f"取引先の作成に失敗しました: {result}")
         return result["id"]
 
-    def update(self, account_id: str, data: Account) -> None:
+    def update(self, data: Account) -> None:
         """取引先を更新する。
 
         Args:
-            account_id: 更新対象の取引先 ID
-            data: 更新するフィールドの値
+            data: 更新するフィールドの値（Id を含めること）
         """
-        self.sf.Account.update(account_id, data.model_dump(exclude_none=True, exclude={"Id"}))
+        self.sf.Account.update(data.Id, data.model_dump(exclude_none=True, exclude={"Id"}))
 
     def delete(self, account_id: str) -> None:
         """取引先を削除する。
@@ -73,21 +72,18 @@ class AccountRepository(SalesforceClient):
         )
         return [BulkResult.model_validate(r) for r in raw]
 
-    def bulk_update(self, account_ids: list[str], records: list[Account]) -> list[BulkResult]:
+    def bulk_update(self, records: list[Account]) -> list[BulkResult]:
         """取引先を一括更新する。
 
         Args:
-            account_ids: 更新対象の取引先 ID のリスト（records と同順）
-            records: 更新するレコードのリスト
+            records: 更新するレコードのリスト（各レコードに Id を含めること）
 
         Returns:
             各レコードの処理結果のリスト
         """
-        payloads = [
-            {"Id": aid, **r.model_dump(exclude_none=True, exclude={"Id"})}
-            for aid, r in zip(account_ids, records)
-        ]
-        raw = self.sf.bulk.Account.update(payloads)
+        raw = self.sf.bulk.Account.update(
+            [r.model_dump(exclude_none=True) for r in records]
+        )
         return [BulkResult.model_validate(r) for r in raw]
 
     def bulk_upsert(

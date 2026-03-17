@@ -42,7 +42,7 @@ def main() -> None:
     # 更新
     # ------------------------------------------------------------------ #
     print("\n=== 取引先を更新 ===")
-    repo.update(new_id, Account(Phone="03-9999-9999"))
+    repo.update(Account(Id=new_id, Phone="03-9999-9999"))
     updated = repo.find_by_id(new_id)
     print(f"  更新後 Phone: {updated.Phone}")
 
@@ -79,12 +79,11 @@ def main() -> None:
     # ------------------------------------------------------------------ #
     print("\n=== 取引先を一括更新 ===")
     update_results = repo.bulk_update(
-        bulk_ids,
         [
-            Account(Phone="03-0001-0001"),
-            Account(Phone="03-0002-0002"),
-            Account(Phone="03-0003-0003"),
-        ],
+            Account(Id=bulk_ids[0], Phone="03-0001-0001"),
+            Account(Id=bulk_ids[1], Phone="03-0002-0002"),
+            Account(Id=bulk_ids[2], Phone="03-0003-0003"),
+        ]
     )
     for r in update_results:
         print(f"  id={r.id}  success={r.success}")
