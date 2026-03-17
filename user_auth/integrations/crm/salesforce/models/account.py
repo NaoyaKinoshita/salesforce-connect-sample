@@ -8,7 +8,7 @@ class Account(BaseModel):
 
     - 取得時: Id・Name が設定される
     - 作成時: Id を除いて渡す（repository 側で除外）
-    - 更新時: Id を除いて変更フィールドのみ渡す
+    - 更新時: Id と変更フィールドのみ渡す
     - extra="allow" により CompanyCode__c 等のカスタムフィールドも扱える
     """
 
@@ -32,6 +32,6 @@ class BulkResult(BaseModel):
 
     model_config = ConfigDict(extra="ignore")
 
-    id: Optional[str] = Field(default=None, description="取引先ID")
+    id: Optional[str] = Field(default=None, description="レコードID")
     success: bool = Field(description="処理成否")
-    errors: list = Field(default=[], description="エラー詳細")
+    errors: list[dict] = Field(default_factory=list, description="エラー詳細")
