@@ -1,4 +1,6 @@
-from pydantic import BaseModel, ConfigDict
+from typing import Optional
+
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class Account(BaseModel):
@@ -12,11 +14,11 @@ class Account(BaseModel):
 
     model_config = ConfigDict(extra="allow")
 
-    Id: str | None = None
-    Name: str | None = None
-    Phone: str | None = None
-    BillingCity: str | None = None
-    BillingState: str | None = None
+    Id: Optional[str] = Field(default=None, description="取引先ID")
+    Name: Optional[str] = Field(default=None, description="取引先名")
+    Phone: Optional[str] = Field(default=None, description="電話番号", examples=["03-1234-5678"])
+    BillingCity: Optional[str] = Field(default=None, description="請求先市区町村", examples=["渋谷区"])
+    BillingState: Optional[str] = Field(default=None, description="請求先都道府県", examples=["東京都"])
 
 
 class BulkResult(BaseModel):
@@ -24,6 +26,6 @@ class BulkResult(BaseModel):
 
     model_config = ConfigDict(extra="ignore")
 
-    id: str | None = None
-    success: bool
-    errors: list = []
+    id: Optional[str] = Field(default=None, description="取引先ID")
+    success: bool = Field(description="処理成否")
+    errors: list = Field(default=[], description="エラー詳細")
