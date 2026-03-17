@@ -1,5 +1,6 @@
 """Salesforce 取引先 CRUD サンプル"""
 
+from integrations.crm.salesforce.models.account import Account
 from integrations.crm.salesforce.repositories.account import AccountRepository
 
 
@@ -12,20 +13,20 @@ def main() -> None:
     print("=== 取引先一覧（最大10件）===")
     accounts = repo.find_all(limit=10)
     for acc in accounts:
-        print(f"  {acc['Id']}  {acc['Name']}")
+        print(f"  {acc.Id}  {acc.Name}")
 
     # ------------------------------------------------------------------ #
     # 新規作成
     # ------------------------------------------------------------------ #
     print("\n=== 取引先を新規作成 ===")
     new_id = repo.create(
-        {
-            "Name": "株式会社テスト",
-            "Phone": "03-0000-0000",
-            "BillingCity": "東京",
-            "BillingState": "東京都",
-            "CompanyCode__c": "TEST001",
-        }
+        Account(
+            Name="株式会社テスト",
+            Phone="03-0000-0000",
+            BillingCity="東京",
+            BillingState="東京都",
+            CompanyCode__c="TEST001",
+        )
     )
     print(f"  作成された ID: {new_id}")
 
@@ -34,16 +35,16 @@ def main() -> None:
     # ------------------------------------------------------------------ #
     print("\n=== 作成した取引先を取得 ===")
     account = repo.find_by_id(new_id)
-    print(f"  Name : {account['Name']}")
-    print(f"  Phone: {account['Phone']}")
+    print(f"  Name : {account.Name}")
+    print(f"  Phone: {account.Phone}")
 
     # ------------------------------------------------------------------ #
     # 更新
     # ------------------------------------------------------------------ #
     print("\n=== 取引先を更新 ===")
-    repo.update(new_id, {"Phone": "03-9999-9999"})
+    repo.update(new_id, Account(Phone="03-9999-9999"))
     updated = repo.find_by_id(new_id)
-    print(f"  更新後 Phone: {updated['Phone']}")
+    print(f"  更新後 Phone: {updated.Phone}")
 
     # ------------------------------------------------------------------ #
     # 名前で検索
@@ -51,7 +52,7 @@ def main() -> None:
     print("\n=== 名前で検索 ===")
     results = repo.search_by_name("テスト")
     for acc in results:
-        print(f"  {acc['Id']}  {acc['Name']}")
+        print(f"  {acc.Id}  {acc.Name}")
 
     # ------------------------------------------------------------------ #
     # 削除
@@ -64,30 +65,29 @@ def main() -> None:
     # 一括作成
     # ------------------------------------------------------------------ #
     print("\n=== 取引先を一括作成 ===")
-    bulk_results = repo.bulk_create(
-        [
-            {"Name": "株式会社一括テストA"},
-            {"Name": "株式会社一括テストB"},
-            {"Name": "株式会社一括テストC"},
-        ]
-    )
-    bulk_ids = [r["id"] for r in bulk_results if r["success"]]
+    bulk_results = repo.bulk_create([
+        Account(Name="株式会社一括テストA"),
+        Account(Name="株式会社一括テストB"),
+        Account(Name="株式会社一括テストC"),
+    ])
+    bulk_ids = [r.id for r in bulk_results if r.success]
     for r in bulk_results:
-        print(f"  id={r['id']}  success={r['success']}  errors={r.get('errors')}")
+        print(f"  id={r.id}  success={r.success}  errors={r.errors}")
 
     # ------------------------------------------------------------------ #
     # 一括更新
     # ------------------------------------------------------------------ #
     print("\n=== 取引先を一括更新 ===")
     update_results = repo.bulk_update(
+        bulk_ids,
         [
-            {"Id": bulk_ids[0], "Phone": "03-0001-0001"},
-            {"Id": bulk_ids[1], "Phone": "03-0002-0002"},
-            {"Id": bulk_ids[2], "Phone": "03-0003-0003"},
-        ]
+            Account(Phone="03-0001-0001"),
+            Account(Phone="03-0002-0002"),
+            Account(Phone="03-0003-0003"),
+        ],
     )
     for r in update_results:
-        print(f"  id={r['id']}  success={r['success']}")
+        print(f"  id={r.id}  success={r.success}")
 
     # ------------------------------------------------------------------ #
     # 一括削除
@@ -95,7 +95,7 @@ def main() -> None:
     print("\n=== 取引先を一括削除 ===")
     delete_results = repo.bulk_delete(bulk_ids)
     for r in delete_results:
-        print(f"  id={r['id']}  success={r['success']}")
+        print(f"  id={r.id}  success={r.success}")
 
 
 if __name__ == "__main__":
