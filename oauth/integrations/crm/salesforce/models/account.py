@@ -16,9 +16,15 @@ class Account(BaseModel):
 
     Id: Optional[str] = Field(default=None, description="取引先ID")
     Name: Optional[str] = Field(default=None, description="取引先名")
-    Phone: Optional[str] = Field(default=None, description="電話番号", examples=["03-1234-5678"])
-    BillingCity: Optional[str] = Field(default=None, description="請求先市区町村", examples=["渋谷区"])
-    BillingState: Optional[str] = Field(default=None, description="請求先都道府県", examples=["東京都"])
+    Phone: Optional[str] = Field(
+        default=None, description="電話番号", examples=["03-1234-5678"]
+    )
+    BillingCity: Optional[str] = Field(
+        default=None, description="請求先市区町村", examples=["渋谷区"]
+    )
+    BillingState: Optional[str] = Field(
+        default=None, description="請求先都道府県", examples=["東京都"]
+    )
 
 
 class BulkResult(BaseModel):
