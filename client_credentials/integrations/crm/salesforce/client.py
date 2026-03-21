@@ -3,11 +3,7 @@
 import requests
 from simple_salesforce import Salesforce
 
-from integrations.crm.salesforce.const import (
-    SF_CLIENT_ID,
-    SF_CLIENT_SECRET,
-    SF_TOKEN_ENDPOINT,
-)
+from integrations.crm.salesforce.models.credentials import SalesforceCredentials
 
 
 class SalesforceClient:
@@ -16,13 +12,13 @@ class SalesforceClient:
     継承したクラスは self.sf を通じて Salesforce API を利用できる。
     """
 
-    def __init__(self) -> None:
+    def __init__(self, credentials: SalesforceCredentials) -> None:
         response = requests.post(
-            SF_TOKEN_ENDPOINT,
+            credentials.token_endpoint,
             data={
                 "grant_type": "client_credentials",
-                "client_id": SF_CLIENT_ID,
-                "client_secret": SF_CLIENT_SECRET,
+                "client_id": credentials.client_id,
+                "client_secret": credentials.client_secret,
             },
             timeout=30,
         )

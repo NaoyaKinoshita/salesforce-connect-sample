@@ -8,18 +8,18 @@ class _const:
         self.__dict__[name] = value
 
 
-import os
-import sys
+import os  # noqa: E402
+import sys  # noqa: E402
 
-from dotenv import load_dotenv, find_dotenv
+from dotenv import find_dotenv, load_dotenv  # noqa: E402
 
-from common.utils import strtobool
+from common.utils import strtobool  # noqa: E402
 
 load_dotenv(find_dotenv())
 
 sys.modules[__name__] = _const()
 
-from . import const
+from . import const  # noqa: E402
 
 const.SF_CLIENT_ID = os.environ["SF_CLIENT_ID"]
 const.SF_CLIENT_SECRET = os.environ["SF_CLIENT_SECRET"]

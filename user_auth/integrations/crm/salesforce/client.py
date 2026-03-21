@@ -2,12 +2,7 @@
 
 from simple_salesforce import Salesforce
 
-from integrations.crm.salesforce.const import (
-    SF_USERNAME,
-    SF_PASSWORD,
-    SF_SECURITY_TOKEN,
-    SF_DOMAIN,
-)
+from integrations.crm.salesforce.models.credentials import SalesforceCredentials
 
 
 class SalesforceClient:
@@ -16,10 +11,10 @@ class SalesforceClient:
     継承したクラスは self.sf を通じて Salesforce API を利用できる。
     """
 
-    def __init__(self) -> None:
+    def __init__(self, credentials: SalesforceCredentials) -> None:
         self.sf = Salesforce(
-            username=SF_USERNAME,
-            password=SF_PASSWORD,
-            security_token=SF_SECURITY_TOKEN,
-            domain=SF_DOMAIN,
+            username=credentials.username,
+            password=credentials.password,
+            security_token=credentials.security_token,
+            domain=credentials.domain,
         )

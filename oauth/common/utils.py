@@ -12,7 +12,7 @@ def escape_soql(value: str) -> str:
 def get_access_token(
     client_id: str,
     username: str,
-    private_key_file: str,
+    private_key: str,
     audience: str,
     token_endpoint: str,
 ) -> tuple[str, str]:
@@ -24,14 +24,6 @@ def get_access_token(
         "aud": audience,
         "exp": now + 300,  # 5分後に期限切れ
     }
-
-    try:
-        with open(private_key_file) as f:
-            private_key = f.read()
-    except OSError as e:
-        raise RuntimeError(
-            f"秘密鍵ファイルの読み込みに失敗しました: {private_key_file}"
-        ) from e
 
     assertion = jwt.encode(payload, private_key, algorithm="RS256")
 

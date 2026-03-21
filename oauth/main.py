@@ -1,11 +1,13 @@
 """Salesforce 取引先 CRUD サンプル"""
 
 from integrations.crm.salesforce.models.account import Account
+from integrations.crm.salesforce.models.credentials import SalesforceCredentials
 from integrations.crm.salesforce.repositories.account import AccountRepository
 
 
 def main() -> None:
-    repo = AccountRepository()
+    credentials = SalesforceCredentials.from_env()
+    repo = AccountRepository(credentials)
 
     # ------------------------------------------------------------------ #
     # 一覧取得
