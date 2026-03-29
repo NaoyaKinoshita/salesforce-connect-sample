@@ -15,7 +15,7 @@ class FieldMetadata(BaseModel):
     picklist_values: list[PicklistValue] = Field(
         alias="picklistValues",
         default_factory=list,
-        description="選択リスト値（picklist のみ）",
+        description="選択リスト値（picklist / multipicklist）",
     )
 
 
