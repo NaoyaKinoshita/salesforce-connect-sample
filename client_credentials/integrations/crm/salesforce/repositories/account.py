@@ -1,5 +1,6 @@
 from integrations.crm.salesforce.client import SalesforceClient
-from integrations.crm.salesforce.models.account import Account, BulkResult
+from integrations.crm.salesforce.models.account import Account
+from integrations.crm.salesforce.models.bulk import BulkResult
 from common.utils import escape_soql
 
 

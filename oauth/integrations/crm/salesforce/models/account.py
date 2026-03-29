@@ -27,11 +27,3 @@ class Account(BaseModel):
     )
 
 
-class BulkResult(BaseModel):
-    """Bulk API の処理結果"""
-
-    model_config = ConfigDict(extra="ignore")
-
-    id: Optional[str] = Field(default=None, description="取引先ID")
-    success: bool = Field(description="処理成否")
-    errors: list = Field(default=[], description="エラー詳細")
