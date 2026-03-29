@@ -9,7 +9,7 @@ class Account(BaseModel):
     - 取得時: Id・Name が設定される
     - 作成時: Id を除いて渡す（repository 側で除外）
     - 更新時: Id と変更フィールドのみ渡す
-    - extra="allow" により CompanyCode__c 等のカスタムフィールドも扱える
+    - extra="allow" により、modelに定義していないフィールドも扱うことができる
     """
 
     model_config = ConfigDict(extra="allow")
@@ -25,5 +25,3 @@ class Account(BaseModel):
     BillingState: Optional[str] = Field(
         default=None, description="請求先都道府県", examples=["東京都"]
     )
-
-

@@ -20,7 +20,9 @@ def main() -> None:
     # describe_specified_fields（フィールドメタデータ取得）
     # ------------------------------------------------------------------ #
     print("\n=== Account フィールドのメタデータ ===")
-    fields = repo.describe_specified_fields("Account", ["Name", "Industry", "Rating", "Phone"])
+    fields = repo.describe_specified_fields(
+        "Account", ["Name", "Industry", "Rating", "Phone"]
+    )
     print(fields)
 
     # ------------------------------------------------------------------ #
@@ -41,7 +43,6 @@ def main() -> None:
             Phone="03-0000-0000",
             BillingCity="東京",
             BillingState="東京都",
-            CompanyCode__c="TEST001",
         )
     )
     print(f"  作成された ID: {new_id}")
@@ -81,11 +82,13 @@ def main() -> None:
     # 一括作成
     # ------------------------------------------------------------------ #
     print("\n=== 取引先を一括作成 ===")
-    bulk_results = repo.bulk_create([
-        Account(Name="株式会社一括テストA"),
-        Account(Name="株式会社一括テストB"),
-        Account(Name="株式会社一括テストC"),
-    ])
+    bulk_results = repo.bulk_create(
+        [
+            Account(Name="株式会社一括テストA"),
+            Account(Name="株式会社一括テストB"),
+            Account(Name="株式会社一括テストC"),
+        ]
+    )
     bulk_ids = [r.id for r in bulk_results if r.success]
     for r in bulk_results:
         print(f"  id={r.id}  success={r.success}  errors={r.errors}")
