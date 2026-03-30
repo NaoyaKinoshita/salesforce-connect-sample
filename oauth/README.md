@@ -10,10 +10,15 @@ salesforce-connect-sample/
 │   ├── server.key          # 秘密鍵（gitignore済み）
 │   └── server.crt          # 公開鍵証明書（gitignore済み）
 ├── common/
-│   └── utils.py            # JWT Bearer Flow によるトークン取得
+│   └── utils.py            # JWT Bearer Flow によるトークン取得・SOQL エスケープ
 ├── integrations/crm/salesforce/
 │   ├── client.py           # Salesforce 接続基底クラス
 │   ├── const.py            # 定数・環境変数
+│   ├── models/
+│   │   ├── account.py      # 取引先モデル
+│   │   ├── bulk.py         # 一括操作結果モデル
+│   │   ├── credentials.py  # 認証情報モデル
+│   │   └── metadata.py     # SObject メタデータモデル
 │   └── repositories/
 │       └── account.py      # 取引先 CRUD 操作
 ├── main.py                 # 実行サンプル

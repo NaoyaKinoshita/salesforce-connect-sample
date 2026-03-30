@@ -26,10 +26,15 @@ salesforce-connect-sample/
 │   │   ├── server.key                  # 秘密鍵（gitignore済み）
 │   │   └── server.crt                  # 公開鍵証明書（gitignore済み）
 │   ├── common/
-│   │   └── utils.py                    # JWT トークン取得ユーティリティ
+│   │   └── utils.py                    # JWT トークン取得・SOQL エスケープユーティリティ
 │   ├── integrations/crm/salesforce/
 │   │   ├── client.py                   # Salesforce 接続基底クラス
 │   │   ├── const.py                    # 定数・環境変数
+│   │   ├── models/
+│   │   │   ├── account.py              # 取引先モデル
+│   │   │   ├── bulk.py                 # 一括操作結果モデル
+│   │   │   ├── credentials.py          # 認証情報モデル
+│   │   │   └── metadata.py             # SObject メタデータモデル
 │   │   └── repositories/
 │   │       └── account.py              # 取引先 CRUD 操作
 │   ├── main.py
@@ -37,9 +42,16 @@ salesforce-connect-sample/
 │   └── README.md
 │
 ├── client_credentials/                 # Client Credentials Flow
+│   ├── common/
+│   │   └── utils.py                    # SOQL エスケープ・strtobool ユーティリティ
 │   ├── integrations/crm/salesforce/
 │   │   ├── client.py                   # Salesforce 接続基底クラス
 │   │   ├── const.py                    # 定数・環境変数
+│   │   ├── models/
+│   │   │   ├── account.py              # 取引先モデル
+│   │   │   ├── bulk.py                 # 一括操作結果モデル
+│   │   │   ├── credentials.py          # 認証情報モデル
+│   │   │   └── metadata.py             # SObject メタデータモデル
 │   │   └── repositories/
 │   │       └── account.py              # 取引先 CRUD 操作
 │   ├── main.py
@@ -47,9 +59,16 @@ salesforce-connect-sample/
 │   └── README.md
 │
 └── user_auth/                          # ユーザー名/パスワード認証
+    ├── common/
+    │   └── utils.py                    # SOQL エスケープユーティリティ
     ├── integrations/crm/salesforce/
     │   ├── client.py                   # Salesforce 接続基底クラス
     │   ├── const.py                    # 定数・環境変数
+    │   ├── models/
+    │   │   ├── account.py              # 取引先モデル
+    │   │   ├── bulk.py                 # 一括操作結果モデル
+    │   │   ├── credentials.py          # 認証情報モデル
+    │   │   └── metadata.py             # SObject メタデータモデル
     │   └── repositories/
     │       └── account.py              # 取引先 CRUD 操作
     ├── main.py

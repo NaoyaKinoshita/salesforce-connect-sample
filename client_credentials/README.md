@@ -17,10 +17,15 @@ Salesforce の取引先（Account）オブジェクトを OAuth 2.0 Client Crede
 ```
 client_credentials/
 ├── common/
-│   └── utils.py            # strtobool ユーティリティ
+│   └── utils.py            # SOQL エスケープ・strtobool ユーティリティ
 ├── integrations/crm/salesforce/
 │   ├── client.py           # Salesforce 接続基底クラス
 │   ├── const.py            # 定数・環境変数
+│   ├── models/
+│   │   ├── account.py      # 取引先モデル
+│   │   ├── bulk.py         # 一括操作結果モデル
+│   │   ├── credentials.py  # 認証情報モデル
+│   │   └── metadata.py     # SObject メタデータモデル
 │   └── repositories/
 │       └── account.py      # 取引先 CRUD 操作
 ├── main.py                 # 実行サンプル
