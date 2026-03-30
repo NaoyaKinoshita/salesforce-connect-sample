@@ -1,13 +1,16 @@
-"""Salesforce 取引先 CRUD サンプル"""
+"""Salesforce 取引先・行動 CRUD サンプル"""
 
 from integrations.crm.salesforce.models.account import Account
 from integrations.crm.salesforce.models.credentials import SalesforceCredentials
+from integrations.crm.salesforce.models.task import Task
 from integrations.crm.salesforce.repositories.account import AccountRepository
+from integrations.crm.salesforce.repositories.task import TaskRepository
 
 
 def main() -> None:
     credentials = SalesforceCredentials.from_env()
     repo = AccountRepository(credentials)
+    task_repo = TaskRepository(credentials)
 
     # ------------------------------------------------------------------ #
     # describe（SObject メタデータ取得）
@@ -70,6 +73,36 @@ def main() -> None:
     results = repo.search_by_name("テスト")
     for acc in results:
         print(f"  {acc.Id}  {acc.Name}")
+
+    # ------------------------------------------------------------------ #
+    # 行動（Task）操作
+    # ------------------------------------------------------------------ #
+    print("\n=== 取引先に行動を登録 ===")
+    task_id = task_repo.create(
+        Task(
+            WhatId=new_id,
+            Subject="電話",
+            Status="未着手",
+            Priority="中",
+            ActivityDate="2025-12-31",
+            Description="フォローアップの電話",
+        )
+    )
+    print(f"  作成された行動 ID: {task_id}")
+
+    print("\n=== 取引先に紐づく行動を取得 ===")
+    tasks = task_repo.find_by_account(new_id)
+    for t in tasks:
+        print(f"  {t.Id}  {t.Subject}  {t.Status}")
+
+    print("\n=== 行動を更新 ===")
+    task_repo.update(Task(Id=task_id, Status="完了"))
+    updated_task = task_repo.find_by_id(task_id)
+    print(f"  更新後 Status: {updated_task.Status}")
+
+    print("\n=== 行動を削除 ===")
+    task_repo.delete(task_id)
+    print(f"  ID {task_id} を削除しました")
 
     # ------------------------------------------------------------------ #
     # 削除
