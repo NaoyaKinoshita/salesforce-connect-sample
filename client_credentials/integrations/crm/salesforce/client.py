@@ -45,6 +45,9 @@ class SalesforceClient:
                 f"Salesforce 認証レスポンスに必要なキーが存在しません: {e}"
             ) from e
 
+    def _describe_sobject(self, sobject_name: str) -> SObjectMetadata:
+        return SObjectMetadata.model_validate(getattr(self.sf, sobject_name).describe())
+
     def describe(self, sobject_name: str) -> SObjectMetadata:
         """指定した SObject のメタデータを取得する。
 
@@ -54,7 +57,7 @@ class SalesforceClient:
         Returns:
             フィールド定義・リレーション等を含むメタデータ
         """
-        return SObjectMetadata.model_validate(getattr(self.sf, sobject_name).describe())
+        return self._describe_sobject(sobject_name)
 
     def describe_specified_fields(
         self, sobject_name: str, field_names: list[str]
@@ -71,7 +74,7 @@ class SalesforceClient:
         Raises:
             ValueError: 指定したフィールドが存在しない場合
         """
-        meta = self.describe(sobject_name)
+        meta = self._describe_sobject(sobject_name)
         fields_by_name = {f.name: f for f in meta.fields}
         for name in field_names:
             if name not in fields_by_name:

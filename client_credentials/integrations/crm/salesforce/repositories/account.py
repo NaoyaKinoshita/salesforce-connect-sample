@@ -1,10 +1,21 @@
 from integrations.crm.salesforce.client import SalesforceClient
 from integrations.crm.salesforce.models.account import Account
 from integrations.crm.salesforce.models.bulk import BulkResult
+from integrations.crm.salesforce.models.metadata import SObjectMetadata
 from common.utils import escape_soql
 
 
 class AccountRepository(SalesforceClient):
+    sobject_name = "Account"
+
+    def describe(self) -> SObjectMetadata:
+        """Account SObject のメタデータを取得する。"""
+        return super().describe(self.sobject_name)
+
+    def describe_specified_fields(self, field_names: list[str]) -> SObjectMetadata:
+        """Account SObject の特定フィールドのメタデータを取得する。"""
+        return super().describe_specified_fields(self.sobject_name, field_names)
+
     def find_all(self, limit: int = 100) -> list[Account]:
         """取引先を一覧取得する。"""
         query = f"SELECT Id, Name, Phone, BillingCity, BillingState FROM Account LIMIT {limit}"
@@ -44,7 +55,12 @@ class AccountRepository(SalesforceClient):
 
         Args:
             data: 更新するフィールドの値（Id を含めること）
+
+        Raises:
+            ValueError: Id が指定されていない場合
         """
+        if not data.Id:
+            raise ValueError("update には Id が必要です")
         self.sf.Account.update(data.Id, data.model_dump(exclude_none=True, exclude={"Id"}))
 
     def delete(self, account_id: str) -> None:
@@ -81,7 +97,13 @@ class AccountRepository(SalesforceClient):
 
         Returns:
             各レコードの処理結果のリスト
+
+        Raises:
+            ValueError: Id が指定されていないレコードが含まれている場合
         """
+        missing = [i for i, r in enumerate(records) if not r.Id]
+        if missing:
+            raise ValueError(f"bulk_update には全レコードに Id が必要です（インデックス: {missing}）")
         raw = self.sf.bulk.Account.update(
             [r.model_dump(exclude_none=True) for r in records]
         )
@@ -93,7 +115,8 @@ class AccountRepository(SalesforceClient):
         """取引先を一括 upsert する。
 
         Args:
-            records: upsert するレコードのリスト
+            records: upsert するレコードのリスト。
+                各レコードには ``external_id_field`` で指定したフィールドの値を含めること。
             external_id_field: 外部 ID フィールドの API 参照名。例: "ExternalId__c"
 
         Returns:

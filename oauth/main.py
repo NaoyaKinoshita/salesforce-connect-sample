@@ -13,16 +13,14 @@ def main() -> None:
     # describe（SObject メタデータ取得）
     # ------------------------------------------------------------------ #
     print("=== Account オブジェクトのメタデータ ===")
-    meta = repo.describe("Account")
+    meta = repo.describe()
     print(meta)
 
     # ------------------------------------------------------------------ #
     # describe_specified_fields（フィールドメタデータ取得）
     # ------------------------------------------------------------------ #
     print("\n=== Account フィールドのメタデータ ===")
-    fields = repo.describe_specified_fields(
-        "Account", ["Name", "Industry", "Rating", "Phone"]
-    )
+    fields = repo.describe_specified_fields(["Name", "Industry", "Rating", "Phone"])
     print(fields)
 
     # ------------------------------------------------------------------ #
