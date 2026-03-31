@@ -2,8 +2,10 @@
 
 from integrations.crm.salesforce.models.account import Account
 from integrations.crm.salesforce.models.credentials import SalesforceCredentials
+from integrations.crm.salesforce.models.event import Event
 from integrations.crm.salesforce.models.task import Task
 from integrations.crm.salesforce.repositories.account import AccountRepository
+from integrations.crm.salesforce.repositories.event import EventRepository
 from integrations.crm.salesforce.repositories.task import TaskRepository
 
 
@@ -11,6 +13,7 @@ def main() -> None:
     credentials = SalesforceCredentials.from_env()
     repo = AccountRepository(credentials)
     task_repo = TaskRepository(credentials)
+    event_repo = EventRepository(credentials)
 
     # ------------------------------------------------------------------ #
     # describe（SObject メタデータ取得）
@@ -103,6 +106,36 @@ def main() -> None:
     print("\n=== 行動を削除 ===")
     task_repo.delete(task_id)
     print(f"  ID {task_id} を削除しました")
+
+    # ------------------------------------------------------------------ #
+    # 行動（Event）操作
+    # ------------------------------------------------------------------ #
+    print("\n=== 取引先に行動を登録 ===")
+    event_id = event_repo.create(
+        Event(
+            WhatId=new_id,
+            Subject="打ち合わせ",
+            StartDateTime="2025-12-31T10:00:00.000+0900",
+            EndDateTime="2025-12-31T11:00:00.000+0900",
+            Location="会議室A",
+            Description="年末の振り返りミーティング",
+        )
+    )
+    print(f"  作成された行動 ID: {event_id}")
+
+    print("\n=== 取引先に紐づく行動を取得 ===")
+    events = event_repo.find_by_account(new_id)
+    for e in events:
+        print(f"  {e.Id}  {e.Subject}  {e.StartDateTime}")
+
+    print("\n=== 行動を更新 ===")
+    event_repo.update(Event(Id=event_id, Location="会議室B"))
+    updated_event = event_repo.find_by_id(event_id)
+    print(f"  更新後 Location: {updated_event.Location}")
+
+    print("\n=== 行動を削除 ===")
+    event_repo.delete(event_id)
+    print(f"  ID {event_id} を削除しました")
 
     # ------------------------------------------------------------------ #
     # 削除
