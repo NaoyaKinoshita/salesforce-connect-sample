@@ -15,7 +15,9 @@ class Task(BaseModel):
     model_config = ConfigDict(extra="allow")
 
     Id: Optional[str] = Field(default=None, description="行動 ID")
-    WhatId: Optional[str] = Field(default=None, description="関連レコード ID（取引先など）")
+    WhatId: Optional[str] = Field(
+        default=None, description="関連レコード ID（取引先など）"
+    )
     Subject: Optional[str] = Field(default=None, description="件名", examples=["電話"])
     Status: Optional[str] = Field(
         default=None, description="状況", examples=["未着手", "進行中", "完了"]
@@ -25,6 +27,9 @@ class Task(BaseModel):
     )
     ActivityDate: Optional[str] = Field(
         default=None, description="期日（YYYY-MM-DD）", examples=["2025-12-31"]
+    )
+    TaskSubtype: Optional[str] = Field(
+        default=None, description="タスク種別", examples=["Call"]
     )
     Description: Optional[str] = Field(default=None, description="説明")
     OwnerId: Optional[str] = Field(default=None, description="所有者 ID")

@@ -83,10 +83,11 @@ def main() -> None:
         Task(
             WhatId=new_id,
             Subject="電話",
-            Status="未着手",
-            Priority="中",
-            ActivityDate="2025-12-31",
-            Description="フォローアップの電話",
+            Status="Completed",
+            Priority="High",
+            ActivityDate="2026-03-31",
+            TaskSubtype="Call",  # TaskSubtypeをCallにすると活動の記録になる
+            Description="活動を記録しました",
         )
     )
     print(f"  作成された行動 ID: {task_id}")
@@ -174,7 +175,7 @@ def main() -> None:
     # ------------------------------------------------------------------ #
     # 一括削除
     # ------------------------------------------------------------------ #
-    # print("\n=== 取引先を一括削除 ===")
+    print("\n=== 取引先を一括削除 ===")
     delete_results = repo.bulk_delete(bulk_ids)
     for r in delete_results:
         print(f"  id={r.id}  success={r.success}")

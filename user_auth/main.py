@@ -26,9 +26,7 @@ def main() -> None:
     # describe_specified_fields（フィールドメタデータ取得）
     # ------------------------------------------------------------------ #
     print("\n=== Account フィールドのメタデータ ===")
-    fields = repo.describe_specified_fields(
-        ["Name", "Industry", "Rating", "Phone"]
-    )
+    fields = repo.describe_specified_fields(["Name", "Industry", "Rating", "Phone"])
     print(fields)
 
     # ------------------------------------------------------------------ #
@@ -85,10 +83,10 @@ def main() -> None:
         Task(
             WhatId=new_id,
             Subject="電話",
-            Status="未着手",
+            Status="完了",
             Priority="中",
-            ActivityDate="2025-12-31",
-            Description="フォローアップの電話",
+            ActivityDate="2026-03-31",
+            Description="活動を記録しました",
         )
     )
     print(f"  作成された行動 ID: {task_id}")
