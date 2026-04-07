@@ -7,6 +7,7 @@ from integrations.crm.salesforce.models.task import Task
 from integrations.crm.salesforce.repositories.account import AccountRepository
 from integrations.crm.salesforce.repositories.event import EventRepository
 from integrations.crm.salesforce.repositories.task import TaskRepository
+from common.utils import decode_valid_for
 
 
 def main() -> None:
@@ -14,6 +15,32 @@ def main() -> None:
     repo = AccountRepository(credentials)
     task_repo = TaskRepository(credentials)
     event_repo = EventRepository(credentials)
+
+    # ------------------------------------------------------------------ #
+    # 連動選択リストの関係性取得
+    # ------------------------------------------------------------------ #
+    PARENT_FIELD = "parent_select_list__c"
+    CHILD_FIELD = "child_select_list__c"
+
+    print(f"=== 連動選択リスト: {PARENT_FIELD} → {CHILD_FIELD} ===")
+    dep_meta = repo.describe_specified_fields([PARENT_FIELD, CHILD_FIELD])
+    fields_by_name = {f.name: f for f in dep_meta.fields}
+
+    parent_field = fields_by_name[PARENT_FIELD]
+    child_field = fields_by_name[CHILD_FIELD]
+
+    print(f"親フィールド : {parent_field.label}（{parent_field.name}）")
+    print(f"子フィールド : {child_field.label}（{child_field.name}）")
+    print(f"コントローラー: {child_field.controller_name}")
+    print(f"{child_field.picklist_values=}")
+
+    parent_values = [pv.value for pv in parent_field.picklist_values if pv.active]
+
+    for child_pv in child_field.picklist_values:
+        if not child_pv.active:
+            continue
+        valid_parents = decode_valid_for(child_pv.valid_for, parent_values)
+        print(f"  [{child_pv.label}] が有効になる親の値: {valid_parents}")
 
     # ------------------------------------------------------------------ #
     # describe（SObject メタデータ取得）
